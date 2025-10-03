@@ -15,7 +15,7 @@ class ChatMessageWrapper extends StatelessWidget {
   final Function(String)? onReactionRemoved;
   final Function(MenuItem)? onMenuItemTapped;
   final Alignment alignment;
-
+  final String userId;
   const ChatMessageWrapper({
     super.key,
     required this.messageId,
@@ -26,9 +26,14 @@ class ChatMessageWrapper extends StatelessWidget {
     this.onReactionRemoved,
     this.onMenuItemTapped,
     this.alignment = Alignment.centerRight,
+    this.userId = "",
   });
 
-  void _handleReactionTap(BuildContext context, String reaction) {
+  void _handleReactionTap(
+    BuildContext context,
+    String reaction,
+    String userId,
+  ) {
     if (config.enableHapticFeedback) {
       HapticFeedback.lightImpact();
     }
@@ -40,23 +45,23 @@ class ChatMessageWrapper extends StatelessWidget {
           context,
           (emoji) {
             Navigator.pop(context);
-            _addReaction(emoji);
+            _addReaction(emoji, userId);
           },
         ),
       );
     } else {
-      _toggleReaction(reaction);
+      _toggleReaction(reaction, userId);
     }
   }
 
-  void _addReaction(String reaction) {
-    controller.addReaction(messageId, reaction);
+  void _addReaction(String reaction, String userId) {
+    controller.addReaction(messageId, reaction, userId: userId);
     onReactionAdded?.call(reaction);
   }
 
-  void _toggleReaction(String reaction) {
-    final wasReacted = controller.hasUserReacted(messageId, reaction);
-    controller.toggleReaction(messageId, reaction);
+  void _toggleReaction(String reaction, String userId) {
+    final wasReacted = controller.hasUserReacted(messageId, reaction, userId);
+    controller.toggleReaction(messageId, reaction, userId: userId);
 
     if (wasReacted) {
       onReactionRemoved?.call(reaction);
@@ -72,7 +77,9 @@ class ChatMessageWrapper extends StatelessWidget {
     onMenuItemTapped?.call(item);
   }
 
-  void _showReactionsDialog(BuildContext context) {
+  void _showReactionsDialog(
+    BuildContext context,
+  ) {
     Navigator.of(context).push(
       HeroDialogRoute(
         builder: (context) => ReactionsDialogWidget(
@@ -80,7 +87,11 @@ class ChatMessageWrapper extends StatelessWidget {
           messageWidget: child,
           controller: controller,
           config: config,
-          onReactionTap: (reaction) => _handleReactionTap(context, reaction),
+          onReactionTap: (reaction) => _handleReactionTap(
+            context,
+            reaction,
+            userId,
+          ),
           onMenuItemTap: _handleMenuItemTap,
           alignment: alignment,
         ),

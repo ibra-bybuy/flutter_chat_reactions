@@ -34,14 +34,14 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final _controller = ReactionsController(currentUserId: 'user123');
+  final _controller = ReactionsController();
 
   @override
   void initState() {
     super.initState();
     for (final message in Message.messages) {
       for (final reaction in message.reactions) {
-        _controller.addReaction(message.id, reaction);
+        _controller.addReaction(message.id, reaction, userId: "123");
       }
     }
   }
@@ -51,7 +51,7 @@ class _ChatScreenState extends State<ChatScreen> {
     required Message message,
     required String reaction,
   }) {
-    _controller.addReaction(message.id, reaction);
+    _controller.addReaction(message.id, reaction, userId: "123");
     setState(() {});
   }
 
@@ -59,7 +59,7 @@ class _ChatScreenState extends State<ChatScreen> {
     required Message message,
     required String reaction,
   }) {
-    _controller.removeReaction(message.id, reaction);
+    _controller.removeReaction(message.id, reaction, "123");
     setState(() {});
   }
 

@@ -49,6 +49,7 @@ class MessageWidget extends StatelessWidget {
               messageId: message.id,
               controller: controller,
               maxReactionsToShow: 3,
+              userId: "1",
             ),
           )
         : Positioned(
@@ -58,6 +59,7 @@ class MessageWidget extends StatelessWidget {
               messageId: message.id,
               controller: controller,
               maxReactionsToShow: 3,
+              userId: "1",
             ),
           );
   }

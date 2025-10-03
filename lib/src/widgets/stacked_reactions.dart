@@ -33,6 +33,9 @@ class StackedReactions extends StatelessWidget {
   /// Reaction background color
   final Color? reactionBackgroundColor;
 
+  /// User id
+  final String userId;
+
   /// Creates a stacked reactions widget.
   const StackedReactions({
     super.key,
@@ -45,6 +48,7 @@ class StackedReactions extends StatelessWidget {
     this.onTap,
     this.customReactionBuilder,
     this.reactionBackgroundColor,
+    required this.userId,
   });
 
   @override
@@ -90,7 +94,11 @@ class StackedReactions extends StatelessWidget {
 
   Widget _buildReactionWidget(
       BuildContext context, String emoji, int count, int index, Color color) {
-    final isUserReacted = controller.hasUserReacted(messageId, emoji);
+    final isUserReacted = controller.hasUserReacted(
+      messageId,
+      emoji,
+      userId,
+    );
     final leftOffset = size - stackedValue;
 
     return Container(

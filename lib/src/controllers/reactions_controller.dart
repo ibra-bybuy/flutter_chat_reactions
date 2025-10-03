@@ -9,13 +9,8 @@ class ReactionsController extends ChangeNotifier {
   /// A map to store reactions for each message ID.
   final Map<String, List<Reaction>> _messageReactions = {};
 
-  /// The ID of the current user.
-  final String currentUserId;
-
   /// Creates a reactions controller.
-  ///
-  /// The [currentUserId] is required to identify the user's reactions.
-  ReactionsController({required this.currentUserId});
+  ReactionsController();
 
   /// Retrieves the list of reactions for a given [messageId].
   List<Reaction> getReactions(String messageId) {
@@ -33,24 +28,29 @@ class ReactionsController extends ChangeNotifier {
   }
 
   /// Checks if the current user has reacted with a specific [emoji] to a [messageId].
-  bool hasUserReacted(String messageId, String emoji) {
+  bool hasUserReacted(String messageId, String emoji, String userId) {
     final reactions = getReactions(messageId);
-    return reactions.any((r) => r.emoji == emoji && r.userId == currentUserId);
+    return reactions.any((r) => r.emoji == emoji && r.userId == userId);
   }
 
   /// Adds a reaction with the given [emoji] to a [messageId].
   ///
   /// An optional [userName] can be provided.
-  void addReaction(String messageId, String emoji, {String? userName}) {
+  void addReaction(
+    String messageId,
+    String emoji, {
+    String? userName,
+    required String userId,
+  }) {
     final reactions = _messageReactions[messageId] ?? [];
     final existingIndex = reactions.indexWhere(
-      (r) => r.emoji == emoji && r.userId == currentUserId,
+      (r) => r.emoji == emoji && r.userId == userId,
     );
 
     if (existingIndex == -1) {
       reactions.add(Reaction(
         emoji: emoji,
-        userId: currentUserId,
+        userId: userId,
         timestamp: DateTime.now(),
         userName: userName,
       ));
@@ -60,9 +60,9 @@ class ReactionsController extends ChangeNotifier {
   }
 
   /// Removes a reaction with the given [emoji] from a [messageId].
-  void removeReaction(String messageId, String emoji) {
+  void removeReaction(String messageId, String emoji, String userId) {
     final reactions = _messageReactions[messageId] ?? [];
-    reactions.removeWhere((r) => r.emoji == emoji && r.userId == currentUserId);
+    reactions.removeWhere((r) => r.emoji == emoji && r.userId == userId);
     _messageReactions[messageId] = reactions;
     notifyListeners();
   }
@@ -70,24 +70,28 @@ class ReactionsController extends ChangeNotifier {
   /// Toggles a reaction with the given [emoji] for a [messageId].
   ///
   /// If the user has already reacted with the emoji, it's removed. Otherwise, it's added.
-  void toggleReaction(String messageId, String emoji, {String? userName}) {
+  void toggleReaction(
+    String messageId,
+    String emoji, {
+    String? userName,
+    required String userId,
+  }) {
     final reactions = _messageReactions[messageId] ?? [];
-    final userReactionIndex =
-        reactions.indexWhere((r) => r.userId == currentUserId);
+    final userReactionIndex = reactions.indexWhere((r) => r.userId == userId);
 
     if (userReactionIndex != -1) {
       final existingReaction = reactions[userReactionIndex];
       // If the user is selecting the same reaction, remove it.
       if (existingReaction.emoji == emoji) {
-        removeReaction(messageId, emoji);
+        removeReaction(messageId, emoji, userId);
       } else {
         // If the user is selecting a different reaction, replace the old one.
         reactions.removeAt(userReactionIndex);
-        addReaction(messageId, emoji, userName: userName);
+        addReaction(messageId, emoji, userName: userName, userId: userId);
       }
     } else {
       // If the user has no reaction, add the new one.
-      addReaction(messageId, emoji, userName: userName);
+      addReaction(messageId, emoji, userName: userName, userId: userId);
     }
   }
 
