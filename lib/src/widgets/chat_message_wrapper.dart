@@ -17,7 +17,6 @@ class ChatMessageWrapper extends StatelessWidget {
   final Alignment alignment;
   final String userId;
   final void Function()? onTap;
-  final String? heroTag;
   const ChatMessageWrapper({
     super.key,
     required this.messageId,
@@ -30,7 +29,6 @@ class ChatMessageWrapper extends StatelessWidget {
     this.alignment = Alignment.centerRight,
     this.userId = "",
     this.onTap,
-    this.heroTag,
   });
 
   void _handleReactionTap(
@@ -111,10 +109,7 @@ class ChatMessageWrapper extends StatelessWidget {
           config.enableLongPress ? () => _showReactionsDialog(context) : null,
       onDoubleTap:
           config.enableDoubleTap ? () => _showReactionsDialog(context) : null,
-      child: Hero(
-        tag: heroTag ?? messageId,
-        child: child,
-      ),
+      child: child,
     );
   }
 }
