@@ -24,7 +24,7 @@ class ChatReactionsConfig {
       emojiPickerBuilder;
   final Widget Function(String, bool)? customReactionBuilder;
   final Widget Function(MenuItem, VoidCallback)? customMenuItemBuilder;
-
+  final bool enableTap;
   const ChatReactionsConfig({
     this.availableReactions = const ['👍', '❤️', '😂', '😮', '😢', '😠', '➕'],
     this.menuItems = const [
@@ -51,6 +51,7 @@ class ChatReactionsConfig {
     this.emojiPickerBuilder = _defaultEmojiPickerBuilder,
     this.customReactionBuilder,
     this.customMenuItemBuilder,
+    this.enableTap = false,
   });
 
   ChatReactionsConfig copyWith({
@@ -76,6 +77,7 @@ class ChatReactionsConfig {
         emojiPickerBuilder,
     Widget Function(String, bool)? customReactionBuilder,
     Widget Function(MenuItem, VoidCallback)? customMenuItemBuilder,
+    bool? enableTap,
   }) {
     return ChatReactionsConfig(
       availableReactions: availableReactions ?? this.availableReactions,
@@ -103,6 +105,7 @@ class ChatReactionsConfig {
           customReactionBuilder ?? this.customReactionBuilder,
       customMenuItemBuilder:
           customMenuItemBuilder ?? this.customMenuItemBuilder,
+      enableTap: enableTap ?? this.enableTap,
     );
   }
 }

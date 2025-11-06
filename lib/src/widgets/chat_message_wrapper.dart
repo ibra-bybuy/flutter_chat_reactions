@@ -16,6 +16,8 @@ class ChatMessageWrapper extends StatelessWidget {
   final Function(MenuItem)? onMenuItemTapped;
   final Alignment alignment;
   final String userId;
+  final void Function()? onTap;
+  final String? heroTag;
   const ChatMessageWrapper({
     super.key,
     required this.messageId,
@@ -27,6 +29,8 @@ class ChatMessageWrapper extends StatelessWidget {
     this.onMenuItemTapped,
     this.alignment = Alignment.centerRight,
     this.userId = "",
+    this.onTap,
+    this.heroTag,
   });
 
   void _handleReactionTap(
@@ -102,12 +106,13 @@ class ChatMessageWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: config.enableTap ? () => _showReactionsDialog(context) : null,
       onLongPress:
           config.enableLongPress ? () => _showReactionsDialog(context) : null,
       onDoubleTap:
           config.enableDoubleTap ? () => _showReactionsDialog(context) : null,
       child: Hero(
-        tag: messageId,
+        tag: heroTag ?? messageId,
         child: child,
       ),
     );
