@@ -115,7 +115,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       alignment: message.isMe
                           ? Alignment.centerRight
                           : Alignment.centerLeft,
-                      child: MessageWidget(
+                      child: (_) => MessageWidget(
                         message: message,
                         controller: _controller,
                       ),

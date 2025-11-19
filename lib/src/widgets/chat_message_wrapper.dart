@@ -8,7 +8,7 @@ import 'package:flutter_chat_reactions/src/widgets/context_menu_widget.dart';
 
 class ChatMessageWrapper extends StatelessWidget {
   final String messageId;
-  final Widget child;
+  final Widget Function(bool asPopup) child;
   final ReactionsController controller;
   final ChatReactionsConfig config;
   final Function(String)? onReactionAdded;
@@ -86,7 +86,7 @@ class ChatMessageWrapper extends StatelessWidget {
       HeroDialogRoute(
         builder: (context) => ReactionsDialogWidget(
           messageId: messageId,
-          messageWidget: child,
+          messageWidget: child.call(true),
           controller: controller,
           config: config,
           onReactionTap: (reaction) => _handleReactionTap(
@@ -109,7 +109,7 @@ class ChatMessageWrapper extends StatelessWidget {
           config.enableLongPress ? () => _showReactionsDialog(context) : null,
       onDoubleTap:
           config.enableDoubleTap ? () => _showReactionsDialog(context) : null,
-      child: child,
+      child: child.call(false),
     );
   }
 }
