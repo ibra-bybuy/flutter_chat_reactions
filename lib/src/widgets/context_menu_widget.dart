@@ -57,13 +57,15 @@ class ReactionsDialogWidget extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ReactionsRow(
-                reactions: config.availableReactions,
-                alignment: alignment,
-                onReactionTap: (reaction, _) =>
-                    _handleReactionTap(context, reaction),
-              ),
-              const SizedBox(height: 10),
+              if (config.maxReactionsToShow > 0) ...[
+                ReactionsRow(
+                  reactions: config.availableReactions,
+                  alignment: alignment,
+                  onReactionTap: (reaction, _) =>
+                      _handleReactionTap(context, reaction),
+                ),
+                const SizedBox(height: 10),
+              ],
               MessageBubble(
                 id: messageId,
                 messageWidget: messageWidget,
